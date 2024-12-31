@@ -38,7 +38,12 @@
                 <div class="task-title">Updates</div>
                 <div id="pie_chart">
                     <!-- Embed the Base64 encoded pie chart -->
-                    <img src="data:image/png;base64,{{ pie_img_base64 }}" alt="Pie Chart">
+                    {% if pie_img_base64 %}
+    <img src="data:image/png;base64,{{ pie_img_base64 }}" alt="Pie Chart for Task Status">
+{% else %}
+    <p>No tasks available to display the chart.</p>
+{% endif %}
+
                 </div>
             </div>
         </div>
@@ -98,19 +103,18 @@
                         <button class="remove-btn" type="submit">Update</button>
                     </form>
                     
+                    <!-- Task status toggle button -->
                     <form action="{{ url_for('toggle_button', task_id=task.id) }}" method="POST">
-                        <button class="remove-btn" type="submit" name="toggle_button">{{ 'undone' if session.get('button_color_' ~ task.id) == 'done' else 'done' }}</button>
+                        <button class="remove-btn" type="submit" name="toggle_button">
+                            {{ button_statuses[task.id] if task.id in button_statuses else 'undone' }}
+                        </button>
                     </form>
-                    
-                    
-                    
-                    <!-- Buttons for marking task as done or not done -->
-                    
                 </td>
-            </tr> 
+            </tr>
             {% endfor %}
         </table>
     </div>
+    
     <div id="complaints">
         
         <div class="comp_form">
@@ -162,3 +166,6 @@
     </footer>
 </body>
 </html>
+
+
+
